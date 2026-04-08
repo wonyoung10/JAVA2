@@ -2,6 +2,92 @@
 ## JAVA2
 <br>
 
+# 2026.04.08
+
+## 메소드의 배열 리턴
+- 배열의 레퍼런스만 리턴
+- 배열 전체 리턴 X
+
+### 메소드의 리턴 타입
+- 리턴하는 배열 타입과 리턴 받는 배열 타입 일치
+- 리턴 타입에 배열의 크기를 지정하지 않음
+```java
+// 리턴 타입[] / 메소드 이름()
+int[] makeArray() {
+    int temp[] = new int[4];
+    return temp;
+    // return 배열 리턴 
+}
+```
+
+
+## 2차원 배열의 초기화
+```java
+int intArrayp[][] = {
+    {0,1,2},
+    {3,4,5},
+    {6,7,8};
+}
+```
+
+## 2차원 배열
+### 2차원 배열 선언
+```java
+int intArray[][]; 
+int[][] intArray2;
+```
+### 2차원 배열 생성
+```java
+intArray = new int[2][5];
+int intArray[] new int[2][5];
+```
+### 2차원 배열의 length 필드
+```java
+i.length // 2차원 배열의 행의 개수로, 2
+i[n].length // n 번째 행의 열의 개수 
+i[1].length // 1번째 행의 열의 개수, 5 
+```
+## 배열과 for-each 문
+- for - each 문 : 배열이나 나열(enumeration)의 원소를 순차 접근하는데 유용한 for 문
+```java
+for(변수 : 배열레퍼런스) {
+    .. 반복 작업문 ..
+}
+```
+- for - each 문으로 정수 배열의 합을 구하는 사례
+```java
+// for - each 문 으로 구현
+int [] n = {1,2,3,4,5};
+int sum = 0;
+for (int k : n) {
+    sum += k;
+    // 반복 할 때 마다 n의 0 번째 부터 끝까지 k 의 값이 바뀐다.
+    // k =1 (n[0]), k = 2(n[1]) ...
+}
+```
+```java
+// 위에 코드를 for 문으로 구현
+for (int i = 0; i < n.length;i++) {
+    int k = n[i];
+    sum += k;
+}
+```
+## 배열의 크기, length 필드
+- 자바의 배열은 객체로 처리
+- 배열의 크기는 배열 객체의 length 필드에 저장
+```java
+int intArray[];
+intArray[] = new int[5];
+
+int size = intArray.length;
+// size는 5 이다.
+```
+- length 필드를 이용하여 배열의 모든 값을 출력하는 사례
+```java
+for (int i =0 ;i<intArray.length;i++) System.out.println(intArray[i]);
+```
+
+
 # 2026.04.01
 ## 레퍼런스 치환과 배열 공유
 - 레퍼런스 치환으로 두 레퍼런스가 하나의 배열 공유
