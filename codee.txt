@@ -1,0 +1,416 @@
+# 202530127 정원영
+
+## JAVA2
+
+<br>
+
+# 2026.04.15
+
+## final 필드
+
+* fianl 필ㄹ드 : 상수를 선언할 때 사용
+
+```java
+class sharedClass {
+    public static final double PI= 3.14
+}
+```
+
+* 상수 필드는 선언시에 **초기 값을 지정**하여야 한다.
+* 상수 필드는 실행 중에 값을 변경할 수 없다.
+
+### 사용법
+
+```java
+System.out.println(sharedClass.PI);
+```
+
+### 언제 쓰는가
+
+👉 변하지 않는 값 (수학 상수, 설정값, 고정 값)
+
+---
+
+## final 클래스와 메소드
+
+* final 클래스 - 더 이상 클래스 상속 불가능
+* final 메소드 - 더 이상 오버라이딩 불가능
+
+### 선언/사용 예시
+
+```java
+final class A {}
+class Parent {
+    final void print() {}
+}
+```
+
+### 언제 쓰는가
+
+👉 상속 막고 싶을 때 (보안, 구조 고정)
+👉 메소드 동작 절대 바뀌면 안 될 때
+
+---
+
+## static 메소드의 제약 조건
+
+### 사용법
+
+```java
+class Util {
+    static int add(int a, int b) {
+        return a + b;
+    }
+}
+
+int result = Util.add(1,2);
+```
+
+### 언제 쓰는가
+
+👉 객체 상태랑 상관없는 기능 (계산, 유틸 함수)
+👉 객체 생성 없이 바로 쓰고 싶을 때
+
+---
+
+## static의 활용
+
+### 사용 예시
+
+```java
+class Counter {
+    static int count = 0;
+    Counter() { count++; }
+}
+```
+
+### 언제 쓰는가
+
+👉 모든 객체가 공유해야 하는 값
+👉 전체 개수, 공통 설정값
+
+---
+
+## static 멤버의 사용
+
+### 사용법
+
+```java
+Counter.count = 10;
+```
+
+### 언제 쓰는가
+
+👉 객체마다 다르면 안 되는 데이터
+
+---
+
+## static 멤버
+
+```java
+class staticSample {
+    int n;
+    static int m;
+    static void f() {}
+}
+```
+
+### 언제 쓰는가
+
+👉 클래스 자체에 속한 기능일 때
+
+---
+
+## 클래스 접근 지정
+
+### 선언 예시
+
+```java
+public class World {}
+class Local {}
+```
+
+### 언제 쓰는가
+
+👉 외부에서 사용 허용 여부 결정할 때
+
+---
+
+## 접근 지정자
+
+### 사용법
+
+```java
+class Test {
+    private int a;
+    public int b;
+    protected int c;
+    int d;
+}
+```
+
+### 언제 쓰는가
+
+👉 데이터 보호 (캡슐화)
+👉 외부 접근 제한할 때
+
+---
+
+## 가비지 컬렉션
+
+### 사용법
+
+```java
+System.gc();
+```
+
+### 언제 쓰는가
+
+👉 거의 직접 안 씀 (JVM이 자동 처리)
+
+---
+
+## 메소드 오버로딩
+
+### 사용법
+
+```java
+class Calc {
+    int sum(int a, int b) { return a + b; }
+    double sum(double a, double b) { return a + b; }
+}
+```
+
+### 언제 쓰는가
+
+👉 같은 기능인데 입력만 다를 때
+
+---
+
+## 인자 전달
+
+### 사용법
+
+```java
+void change(int x) { x = 10; }
+void changeArr(int[] arr) { arr[0] = 99; }
+```
+
+### 언제 쓰는가
+
+👉 값 복사 vs 참조 공유 구분 필요할 때
+
+---
+
+## 메소드
+
+```java
+[접근지정자] [리턴타입] 메소드명(파라미터) {
+    return 값;
+}
+```
+
+### 언제 쓰는가
+
+👉 기능을 하나로 묶고 재사용할 때
+
+---
+
+## 객체 배열
+
+### 사용법
+
+```java
+Circle[] arr = new Circle[3];
+for(int i=0;i<3;i++) {
+    arr[i] = new Circle(i);
+}
+```
+
+### 언제 쓰는가
+
+👉 같은 객체 여러 개 다룰 때
+
+---
+
+## this 레퍼런스
+
+### 사용법
+
+```java
+class A {
+    int x;
+    A(int x) {
+        this.x = x;
+    }
+}
+```
+
+### 언제 쓰는가
+
+👉 필드와 매개변수 이름 같을 때
+👉 현재 객체를 명확히 가리킬 때
+
+---
+
+## 생성자
+
+### 사용법
+
+```java
+class A {
+    A() {}
+    A(int x) {}
+}
+```
+
+### 언제 쓰는가
+
+👉 객체 생성할 때 초기값 넣고 싶을 때
+
+---
+
+# 2026.04.08
+
+## 클래스와 객체
+
+```java
+Circle c = new Circle();
+c.radius = 10;
+```
+
+### 언제 쓰는가
+
+👉 실제 데이터를 만들고 사용할 때
+
+---
+
+## 상속
+
+```java
+class Child extends Parent {}
+```
+
+### 언제 쓰는가
+
+👉 기존 코드 재사용 + 기능 확장할 때
+
+---
+
+## 예외 처리
+
+```java
+try {
+    int a = 1/0;
+} catch(Exception e) {
+    System.out.println("에러");
+}
+```
+
+### 언제 쓰는가
+
+👉 프로그램 죽지 않게 할 때
+
+---
+
+## 배열 리턴
+
+```java
+int[] getArr() {
+    return new int[]{1,2,3};
+}
+```
+
+### 언제 쓰는가
+
+👉 여러 값을 한 번에 반환할 때
+
+---
+
+# 2026.04.01
+
+## 배열
+
+```java
+int[] arr = new int[5];
+```
+
+### 언제 쓰는가
+
+👉 같은 타입 여러 개 저장할 때
+
+---
+
+## for-each
+
+```java
+for(int n : arr) {
+    System.out.println(n);
+}
+```
+
+### 언제 쓰는가
+
+👉 배열 전체 순회할 때 (간단하게)
+
+---
+
+## 반복문
+
+```java
+for(int i=0;i<10;i++) {}
+while(true) {}
+```
+
+### 언제 쓰는가
+
+👉 반복 작업 필요할 때
+
+---
+
+## 조건문
+
+```java
+if(a > b) {}
+```
+
+### 언제 쓰는가
+
+👉 조건에 따라 실행 다르게 할 때
+
+---
+
+# 2026.03.25
+
+## 연산자
+
+```java
+int a = 10 + 5;
+boolean b = a > 3;
+```
+
+### 언제 쓰는가
+
+👉 계산, 비교, 논리 처리할 때
+
+---
+
+## Scanner
+
+```java
+Scanner sc = new Scanner(System.in);
+int n = sc.nextInt();
+```
+
+### 언제 쓰는가
+
+👉 사용자 입력 받을 때
+
+---
+
+## 타입 변환
+
+```java
+int a = (int)3.14;
+```
+
