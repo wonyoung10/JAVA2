@@ -3,7 +3,333 @@
 
 <br>
 
+# 2026.05.13
+
+## 컴포넌트의 절대 위치와 크기 설정
+
+### 배치관리자가 없는 컨테이너에 컴포넌트를 삽입할 때
+- 프로그램에서 컴포넌트의 `절대 크기와 위치 설정`
+- 컴포넌트들이 서로 겹치게 할 수 있음
+
+---
+
+###  컴포넌트의 크기와 위치 설정 메소드
+```java
+- void setSize(int width, int height) // 컴포넌트 크기 설정
+- void setLocation(int x, int y) // 컴포넌트 위치 설정
+- void setBounds(int x, int y, int width, int height) // 위치와 크기 동시 설정
+```
+---
+
+### 예시) 
+```java
+//버튼을 100x40 크기로 하고, JPanel의 (50, 50) 위치에 배치
+JPanel p = new JPanel();
+p.setLayout(null); // 패널 p의 배치관리자 제거
+
+JButton clickButton = new JButton("Click");
+clickButton.setSize(100, 40);      // 버튼 크기를 100x40으로 지정
+clickButton.setLocation(50, 50);    // 버튼 위치를 (50, 50)으로 지정
+p.add(clickButton);                // 패널 내 (50, 50)에 100x40 크기의 버튼 출력
+```
+
+## 배치관리자 없는 컨테이너
+
+### 배치관리자가 없는 컨테이너가 필요한 경우
+- 응용프로그램에서 직접 컴포넌트의 크기와 위치를 결정하고자 하는 경우
+    1. 컴포넌트의 크기나 위치를 개발자 임의로 결정하고자 하는 경우
+    2. 게임 프로그램과 같이 시간이나 마우스/키보드의 입력에 따라 컴포넌트들의 위치와 크기가 수시로 변하는 경우
+    3. 여러 컴포넌트들이 서로 겹쳐 출력하고자 하는 경우
+
+---
+
+### 컨테이너의 배치 관리자 제거 방법
+```java 
+container.setLayout(null);
+```
+
+**코드 예시:**
+```java
+JPanel p = new JPanel();
+p.setLayout(null); // JPanel의 배치관리자 삭제
+```
+## GridLayout 배치관리자
+### 배치방법
+- 컨테이너 공간을 동일한 사각형 격자(그리드)로 분할하고 각 셀에 컴포넌트 하나씩 배치
+    - 생성자에 행수와 열수 지정
+    - 셀에 왼쪽에서 오른쪽으로, 다시 위에서 아래로 순서대로 배치
+
+---
+
+예시
+```java
+container.setLayout(new GridLayout(4,3,5,5)); // 4x3 분할로 컴포넌트 배치
+container.add(new JButton("1")); // 상단 왼쪽 첫 번째 셀에 버튼 배치
+container.add(new JButton("2")); // 그 옆 셀에 버튼 배치
+```
+
+# BorderLayout 생성자와 add() 메소드
+
+### 생성자
+- `BorderLayout()`
+- `BorderLayout(int hGap, int vGap)`
+    - **hGap**: 좌우 두 컴포넌트 사이의 수평 간격, 픽셀 단위(디폴트 : 0)
+    - **vGap**: 상하 두 컴포넌트 사이의 수직 간격, 픽셀 단위(디폴트 : 0)
+
+---
+
+### add() 메소드
+- `void add(Component comp, int index)`
+    - **comp** 컴포넌트를 **index** 위치에 삽입한다.
+    - **index**: 컴포넌트의 위치
+        - **동** : `BorderLayout.EAST`
+        - **서** : `BorderLayout.WEST`
+        - **남** : `BorderLayout.SOUTH`
+        - **북** : `BorderLayout.NORTH`
+        - **중앙** : `BorderLayout.CENTER`
+
+
+
+
+
+# #FlowLayout의 생성자
+
+### 생성자 종류
+* `FlowLayout()`
+* `FlowLayout(int align, int hGap, int vGap)`
+
+---
+
+### 파라미터 상세 설명
+
+* **align**: 컴포넌트를 정렬하는 방법 지정
+    * 왼쪽 정렬 (`FlowLayout.LEFT`)
+    * 오른쪽 정렬 (`FlowLayout.RIGHT`)
+    * 중앙 정렬 (`FlowLayout.CENTER`) - 디폴트
+
+* **hGap**: 좌우 두 컴포넌트 사이의 수평 간격 (픽셀 단위, **디폴트: 5**)
+
+* **vGap**: 상하 두 컴포넌트 사이의 수직 간격 (픽셀 단위, **디폴트 : 5**)
+
+## 컨테이너에 새로운 배치관리자 설정
+### 1. 컨테이너에 새로운 배치관리자 설정
+* `setLayout(LayoutManager lm)` 메소드 호출 : `lm`을 새로운 배치관리자로 설정
+
+- ex)
+    - JPanel 컨테이너에 BorderLayout 배치관리자를 설정하는 예
+```java
+JPanel p = new JPanel();
+p.setLayout(new BorderLayout()); // JPanel에 BorderLayout 설정
+
+## 디폴트 배치관리자
+`컨테이너 생성시 자동`으로 생성되는 배리관리자
+
+## Java Swing 배치관리자 (Layout Manager)
+
+### 1. FlowLayout 배치관리자
+* 컴포넌트가 삽입되는 순서대로 `왼쪽에서 오른쪽으로` 배치
+* `배치할 공간이 없으면` 아래로 내려와서 반복
+
+### 2. BorderLayout 배치관리자
+* 컨테이너의 공간을 **동(EAST), 서(WEST), 남(SOUTH), 북(NORTH), 중앙(CENTER)**의 5개 영역으로 나눔
+* 5개 영역 중 응용프로그램에서 `지정한 영역에 컴포넌트 배치`
+
+### 3. GridLayout 배치관리자
+* 컨테이너를 프로그램에서 설정한 `동일한 크기의 2차원 격자`로 나눔
+* 컴포넌트는 삽입 순서대로 `좌에서 우로, 다시 위에서 아래로` 배치
+
+### 4. CardLayout 배치관리자
+* 컨테이너의 공간에 `카드를 쌓아 놓은 듯이 컴포넌트를 포개어` 배치
+
+
+## 컨테이너와 배치, 배치 관리자 개념
+- 컨테이너의 배치 관리자
+    - 컨테이너마다 하나의 배치 관리자가 존재한다.
+
+## SWING 종료 관련
+### 1. 응용프로그램 내에서 스스로 종료하는 방법
+* 언제 어디서나 무조건 종료
+```java
+System.exit(0);
+```
+2. 프레임의 오른쪽 상단의 종료버튼(X)이 클릭되면 어떤 일이 일어나는가?
+프레임 종료, 프레임 윈도우를 닫음 : 프레임이 화면에서 보이지 않게 됨!
+
+3. 프레임이 보이지 않게 되지만 응용프로그램이 종료한 것 아님
+키보드나 마우스 입력을 받지 못함
+
+다시 setVisible(true)를 호출하면, 보이게 되고 이전 처럼 작동함
+
+4. 프레임 종료버튼이 클릭될 때, 프레임과 함께 프로그램을 종료 시키는 방법
+```Java
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+```
+## 2026년도 JDK 버전 권장 사항 및 확인 방법
+
+### 주요 권장 사항 들
+* **2026년 기준**, JDK는 **Java 17** 또는 **Java 21 (LTS 버전)** 사용이 권장됩니다.
+* **신규 프로젝트**는 21, **기존 레거시 시스템**은 17이나 11을 주로 사용합니다.
+* **Java 8**은 지원 종료 시점(2026년 11월)이 가까워 전환이 필요합니다.
+
+### 주의 사항
+* **JDK 1.5**는 2004년도에 릴리즈된 버전입니다. 
+- 공식 지원도 끝난 상태
+
+###  JDK 버전 확인 방법
+```bash
+$ java --version
+```
+
+## Java Swing: Content Pane 관리 (JDK 1.5 전후 비교)
+### JDK 1.5 이전
+* 프레임의 컨텐트팬을 알아내어, 반드시 컨텐트팬에 컴포넌트 부착
+    ```java
+    Container c = frame.getContentPane();
+    c.add(new JButton("Click")); // 컨텐트팬에 직접 컴포넌트 부착
+    ```
+
+### JDK 1.5 이후 추가된 사항
+* 프레임에 컴포넌트를 부착하면 프레임이 대신 컨텐트팬에 부착
+    ```java
+    frame.add(new JButton("Click"));
+    // 프레임이 버튼 컴포넌트를 컨텐트팬에 대신 부착
+    ```
+---
+## 컨텐트팬
+- 컨텐트팬?
+    - 스윙 컴포넌트(버튼, 레이블 등)들이 실제로 부착되는 공간입니다.
+
+- 컨텐트팬 알아내는 법
+    - 스윙 프레임에 기본적으로 붙어 있는 디폴트 컨텐트팬을 가져와야 합니다.
+
+```java
+public class MyFrame extends JFrame {
+    MyFrame() {
+        // 프레임의 컨텐트팬을 알아낸다.
+        Container contentPane = getContentPane();
+    }
+}
+```
+## 1. 타이틀 달기
+프레임 상단의 제목을 설정할 때는 `super()` 생성자를 이용하거나 `setTitle()` 메소드를 사용합니다.
+
+```java
+// 방법 1: super() 이용
+MyFrame() { // 생성자
+    super("타이틀문자열");
+}
+
+// 방법 2: setTitle() 이용
+MyFrame() { // 생성자
+    setTitle("타이틀문자열");
+}
+```
+## 스윙 응용프로그램에서 main()의 기능 최소화 바람직
+
+### 주요 원칙
+* 스윙 응용프로그램이 실행되는 **시작점으로서의 기능**만 수행
+* 스윙 **프레임을 생성**하는 정도의 코드로 최소화
+
+### 기본 코드 예시
+```java
+public static void main(String [] args) {
+    MyFrame frame = new MyFrame(); // 스윙 프레임 생성
+}
+//실무 권장 코딩 방식
+//EDT(Event Dispatch Thread)에서 프레임을 생성하는 것이 일반적입니다.
+
+Java
+public static void main(String[] args) {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        new MyFrame(); // EDT에서 프레임 생성
+    });
+}
+```
+## 프레임 만들기, JFrame 클래스 상속
+### 스윙 프레임
+* `JFrame` 클래스를 상속받은 클래스 작성
+* 프레임의 크기 반드시 지정 : `setSize()` 호출
+* 프레임을 화면에 출력하는 코드 반드시 필요 : `setVisible(true)` 호출
+```java
+import javax.swing.*;
+
+public class MYFrame extends JFrame {
+    public MyFrame() {
+        setSize("300x300 스윙 프레임 만들기");
+        setSize(300,300);
+        setVisible(true);
+    }
+    public stack void main() {
+
+    }
+}
+```
+## Swing 프레임
+### 스윙 프레임 : 모든 스윙 컴포넌트를 담는 최상위 컨테이너
+* `JFrame`을 상속받아 구현
+* 컴포넌트들은 화면에 보이려면 스윙 프레임에 부착되어야 함
+* 프레임을 닫으면 프레임에 부착된 모든 컴포넌트가 보이지 않게 됨
+
+---
+
+### 스윙 프레임(JFrame) 기본 구성
+* **프레임** : 스윙 프로그램의 기본 틀
+* **메뉴바** : 메뉴들이 부착되는 공간
+* **컨텐트팬** : GUI 컴포넌트들이 부착되는 공간
+# Swing GUI 프로그램 만들기
+### 스윙 GUI 프로그램을 만드는 과정
+1. 스윙 프레임 만들기
+2. main() 메소드 작성
+3. 스윙 프레임에 스윙 컴포넌트 붙이기
+
+---
+
+### 스윙 프로그램 작성에 필요한 import문
+* `import java.awt.*;` // 그래픽 처리를 위한 클래스들의 경로명
+* `import java.awt.event.*;` // AWT 이벤트 사용을 위한 경로명
+* `import javax.swing.*;` // 스윙 컴포넌트 클래스들의 경로명
+* `import javax.swing.event.*;` // 스윙 이벤트를 위한 경로명
+
+## 컨테이너와 컴포넌트의 포함관계
+- 최상위 컨테이너를 바닥에 깔고, 그 위에 컨테이너를 놓고, 다시 컴포넌트를 쌓아가는 방식, 즉 레고 블록을 쌓는 듯이 GUI 프로그램을 작성한다.
+
+## 컨테이너와 컴포넌트
+
+### 컨테이너 (Container)
+* 다른 컴포넌트를 포함할 수 있는 GUI 컴포넌트 : `java.awt.Container`를 상속받음
+* 다른 컨테이너에 포함될 수 있음
+* **AWT 컨테이너**: Panel, Frame, Applet, Dialog, Window
+* **Swing 컨테이너**: JPanel, JFrame, JApplet, JDialog, JWindow
+
+---
+
+### 컴포넌트 (Component)
+* 컨테이너에 포함되어야 화면에 출력될 수 있는 GUI 객체
+* 다른 컴포넌트를 포함할 수 없는 순수 컴포넌트
+* 모든 GUI 컴포넌트가 상속받는 클래스 : `java.awt.Component`
+* 스윙 컴포넌트가 상속받는 클래스 : `javax.swing.JComponent`
+
+---
+
+### 최상위 컨테이너 (Top-level Container)
+* 다른 컨테이너에 포함되지 않고도 화면에 출력되며, 독립적으로 존재 가능한 컨테이너
+* 스스로 화면에 자신을 출력하는 컨테이너 : `JFrame`, `JDialog`, `JApplet`
+
+## 스윙 GUI 프로그램 샘플
+- 스윙 응용프로그램은 스윙 컴포넌트를 이용하여 레고 블록을 조립하듯이 작성
+
+## Swing 컴포넌트 예시
+- JButton
+- JCheckBoxz
+- JMenu
+
+## 자바의 GUI
+- GUI : 사용자가 편리하게 입출력 할 수 있도록 `그래픽으로 화면을 구성`하고, 마우스나 키보드로 입력 받을 수 있도록 지원하는 사용자 인터페이스
+- 자바 언어에서 GUI 응용프로그램 작성 : `AWT와 Swing 패키지`에 강력한 GUI 컴포넌트 제공.
+- Swing 패키지AWT 기술을 기반으로 작성됬다
+
 # 2026.05.06
+
 ## HashMap<K,V>
 
 
