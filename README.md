@@ -1,7 +1,177 @@
 # 202530127 정원영
 ## JAVA2
 
+- [1주차](#20260304)
+- [2주차](#20260311)
+- [3주차](#20260318)
+- [4주차](#20260325)
+- [5주차](#20260401)
+- [6주차](#20260408)
+- [7주차](#20260415)
+- [8주차](#20260422)
+- [9주차](#20260429)
+- [10주차](#20260506)
+- [11주차](#20260513)
+- [12주차](#20260520)
 <br>
+
+# 2026.05.20
+
+## 익명 클래스로 이벤트 리스너 작성
+- 익명 클래스 : 이름 없는 클래스
+    - (클래스 선언 + 인스턴스 생성)을 한번에 달성
+```java
+new 익명클래스의 슈퍼클래스이름(생성자인자들) {
+    익명클래스의 멤버 구현
+}
+```
+- 간단한 리스너의 경우 익명 클래스 사용 추천
+    - 매소드의 개수가 1,2개인 리스너에 대해주로 사용
+        - ㅁctionListener, ItemListener
+## 이벤트 리스너 작성 방법
+
+### [ 3 가지 방법 ]
+
+- **독립 클래스로 작성**
+  - 이벤트 리스너를 완전한 클래스로 작성
+  - 이벤트 리스너를 `여러 곳에서 사용할 때 적합`
+
+- **`내부 클래스`(inner class)로 작성**
+  - 클래스 안에 멤버처럼 클래스 작성
+  - 이벤트 `리스너를 특정 클래스에서만 사용할 때 적합`
+
+- **익명 클래스(anonymous class)로 작성**
+  - 클래스의 `이름 없이 간단히 리스너 작성`
+  - 클래스 조차 만들 필요 없이 리스너 `코드가 간단한 경우에 적합`
+
+---
+
+## 소스코드 예시 (독립 클래스 방식)
+
+### 1. 이벤트 리스너 클래스 정의
+```java
+class MyActionListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) { // 버튼이 클릭될 때 호출되는 메소드
+        JButton b = (JButton)e.getSource();     // 사용자가 클릭한 버튼 알아내기
+        if(b.getText().equals("Action"))        // 버튼의 문자열이 "Action"인지 비교
+            b.setText("액션");                  // JButton의 setText() 호출. 문자열변경
+        else
+            b.setText("Action");                // JButton의 setText() 호출. 문자열변경
+    }
+}
+
+## 이벤트 리스너 작성 과정 사례
+- 이벤트와 이벤트 리스너 선택
+    - ex) 버튼 클릭을 처리하고자 하는 겨웅
+        - 이벤트 : ActionEvent, 이벤트 리스너 : ActionLinstener
+
+- 이벤트 리스너 클래스 작성 : ActionListener 인터페이스 구현
+```java
+class MyActionListener implements ActionListener {
+    public void actionPerformed(ActionEvent e) { // 버튼이 클릭될 때 호출되는 메소드
+        JButton b = (JButton)e.getSource();     // 사용자가 클릭한 버튼 알아내기
+        if(b.getText().equals("Action"))        // 버튼의 문자열이 "Action"인지 비교
+            b.setText("액션");                  // JButton의 setText() 호출. 문자열변경
+        else
+            b.setText("Action");                // JButton의 setText() 호출. 문자열변경
+    }
+}
+```
+
+- 이벤트 리스너 등록
+    1. 이벤트를 받아 처리하고자 하는 컴포넌트에 이벤트 리스너 등록
+    - ex) component.addXXXListener(listener)
+        - xxx : 이벤트명, listener : 이벤트 리스너 객체
+```java
+MyActionListener listener = new MyActionListener(); // 리스너 인스턴스 생성
+btn.addActionListener(listener);                    // 리스너 등록        
+```
+
+## 리스너 인터페이스
+
+- **이벤트 리스너** : 이벤트를 처리하는 자바 프로그램 코드, 클래스로 작성
+
+- **자바는 다양한 리스너 인터페이스 제공**
+
+  - 예) `ActionListener` 인터페이스 – 버튼 클릭 이벤트를 처리하기 위한 인터페이스
+
+  ```java
+  interface ActionListener { // 아래 메소드를 개발자가 구현해야 함
+      public void actionPerformed(ActionEvent e); // Action 이벤트 발생시 호출됨
+  }
+  ```
+  - 예) `MouseListener` 인터페이스 – 마우스 조작에 따른 이벤트를 처리하기 위한 인터페이스
+
+  ```java
+  interface MouseListener { // 아래의 5개 메소드를 개발자가 구현해야 함
+      public void mousePressed(MouseEvent e);  // 마우스 버튼이 눌러지는 순간 호출
+      public void mouseReleased(MouseEvent e); // 눌러진 마우스 버튼이 떼어지는 순간 호출
+      public void mouseClicked(MouseEvent e);  // 마우스가 클릭되는 순간 호출
+      public void mouseEntered(MouseEvent e);  // 마우스가 컴포넌트 위에 올라가는 순간 호출
+      public void mouseExited(MouseEvent e);   // 마우스가 컴포넌트 위에서 내려오는 순간 호출
+  }
+  ```
+
+- **사용자의 이벤트 리스너 작성**
+  - 자바의 리스너 인터페이스(interface)를 상속받아 구현
+  - 리스너 인터페이스의 모든 추상 메소드 구현
+
+## 이벤트 객체 (Event Object)
+- 발생한 이벤트에 관한 `정보를 가진 객체`
+- `이벤트 리스너에 전달됨`
+  - 이벤트 리스너 코드가 발생한 이벤트에 대한 상황을 파악할 수 있게 함
+
+### 이벤트 객체가 포함하는 정보
+- 이벤트 종류와 이벤트 소스
+- 이벤트가 발생한 화면 좌표 및 컴포넌트 내 좌표
+- 이벤트가 발생한 버튼이나 메뉴 아이템의 문자열
+- 클릭된 마우스 버튼 번호 및 마우스의 클릭 횟수
+- 키의 코드 값과 문자 값
+- 체크박스, 라디오버튼 등과 같은 컴포넌트에 이벤트가 발생하였다면 체크 상태
+
+### 이벤트 소스를 알아 내는 메소드 : Object getSource()
+- 발생한 이벤트의 `소스 컴포넌트 리턴`
+- `Object 타입으로 리턴하므로 캐스팅하여 사용`
+- 모든 이벤트 객체에 대해 적용
+---
+## 이벤트 기반 프로그래밍 (Event Driven Programming)
+- 이벤트의 발생에 의해 `프로그램 흐름이 결정되는 방식`
+  - 이벤트가 발생하면 이벤트를 처리하는 루틴(`이벤트 리스너`) 실행
+  - 실행될 코드는 이벤트의 발생에 의해 전적으로 결정됨
+- **반대되는 개념** : 배치 실행 (batch programming)
+  - 프로그램의 개발자가 프로그램의 흐름을 결정하는 방식
+- **이벤트 종류**
+  - 사용자의 입력 : 마우스 드래그, 마우스 클릭, 키보드 누름 등
+  - 센서로부터의 입력, 네트워크로부터 데이터 송수신
+  - 다른 응용프로그램이나 다른 스레드로부터의 메시지
+
+### 이벤트 기반 응용 프로그램의 구조
+- 각 이벤트마다 처리하는 `리스너 코드 보유`
+
+### `GUI 응용프로그램은 이벤트 기반 프로그래밍으로 작성됨`
+- GUI 라이브러리 종류 : C++의 MFC, C# GUI, Visual Basic, X Window, Android 등
+- 자바의 `AWT와 Swing`
+
+---
+
+## 이벤트 분배 스레드 (Event Dispatch Thread, EDT)
+- 자바 스윙 응용프로그램이 실행될 때 JVM이 자동으로 생성하는 스레드
+- **하는 일**: 프레임 화면 그리기, 컴포넌트 위치/크기 조절, 마우스 클릭이나 키보드 입력 같은 GUI 이벤트 처리
+
+### 스윙의 단일 스레드 모델 정책
+- 스윙의 모든 컴포넌트는 멀티스레드로부터 안전하지 않음 (Thread-safe 하지 않음)
+- 컴포넌트 수정이나 화면 업데이트는 오직 `이벤트 분배 스레드(EDT)`에서만 처리해야 함
+- `main()` 메소드나 다른 사용자 스레드에서 직접 GUI를 변경하면 화면 꼬임이나 예기치 못한 오류 발생 가능
+
+### 실무 권장 프레임 생성 코드
+- GUI 생성 및 변경은 반드시 EDT 내에서 실행되도록 큐에 대기시키는 방식을 권장
+```java
+public static void main(String[] args) {
+    javax.swing.SwingUtilities.invokeLater(() -> {
+        new MyFrame(); // EDT에서 프레임 생성
+    });
+}
+```
 
 # 2026.05.13
 
