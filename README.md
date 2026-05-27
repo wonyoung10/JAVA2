@@ -13,7 +13,206 @@
 - [10주차](#20260506)
 - [11주차](#20260513)
 - [12주차](#20260520)
+- [13주차](#2026.05.27)
 <br>
+
+# 2026.05.27
+
+## 자바의 GUI 프로그래밍 방법
+
+### [ 자바의 GUI 프로그래밍 방법 2 종류 ]
+
+- **컴포넌트 기반 GUI 프로그래밍**
+  - 스윙 컴포넌트를 이용하여 쉽게 GUI를 구축
+  - 자바에서 제공하는 컴포넌트의 한계를 벗어나지 못함
+
+- **그래픽을 이용하여 GUI 구축**
+  - 그래픽 기반 GUI 프로그래밍
+  - 개발자가 직접 그래픽으로 화면을 구성하는 부담
+  - 독특한 GUI를 구성할 수 있는 장점
+  - GUI 처리의 실행 속도가 빨라, 게임 등에 주로 이용
+
+> 교재에서는 Swing 컴포넌트 중 8개 컴포넌트의 사용법에 관해 설명하고 있습니다.
+> `Jlabel`, `Jbutton`, `JCheckBox`, `JRadioButton`, `JTextField`, `JTextArea`, `Jlist`, `JComboBox`
+
+> 이 챕터는 "8장 자바 GUI 스윙 기초"를 기반으로 몇 가지 추가 예제를 소개하고 있습니다.
+
+### 스윙 컴포넌트 활용
+
+
+### Mouse 이벤트와 MouseListener, MouseMotionListener
+
+- **Mouse 이벤트** : 사용자의 마우스 조작에 따라 발생하는 이벤트
+
+| Mouse 이벤트가 발생하는 경우 | 리스너의 메소드 | 리스너 |
+|---|---|---|
+| 마우스가 컴포넌트 위에 올라갈 때 | `void mouseEntered(MouseEvent e)` | MouseListener |
+| 마우스가 컴포넌트에서 내려올 때 | `void mouseExited(MouseEvent e)` | MouseListener |
+| 마우스 버튼이 눌러졌을 때 | `void mousePressed(MouseEvent e)` | MouseListener |
+| 눌러진 버튼이 떼어질 때 | `void mouseReleased(MouseEvent e)` | MouseListener |
+| 마우스로 컴포넌트를 클릭하였을 때 | `void mouseClicked(MouseEvent e)` | MouseListener |
+| 마우스가 드래그되는 동안 | `void mouseDragged(MouseEvent e)` | MouseMotionListener |
+| 마우스가 움직이는 동안 | `void mouseMoved(MouseEvent e)` | MouseMotionListener |
+
+- `mouseClicked()` : 마우스가 눌러진 위치에서 그대로 떼어질 때 호출
+- `mouseReleased()` : 마우스가 눌러진 위치에서 그대로 떼어지든 아니든 항상 호출
+- `mouseDragged()` : 마우스가 드래그되는 동안 계속 여러번 호출
+
+- **마우스가 눌러진 위치에서 떼어지는 경우 메소드 호출 순서**
+  - `mousePressed()`, `mouseReleased()`, `mouseClicked()`
+
+
+- **마우스가 드래그될 때 호출되는 메소드 호출 순서**
+  - `mousePressed()`, `mouseDragged()`, `mouseDragged()`, …, `mouseDragged()`, `mouseReleased()`
+
+### KeyListener 활용 - 입력된 문자 키 판별
+
+- 컨텐트팬에 `<Enter>` 키를 입력할 때마다 배경색을 랜덤하게 바꾸고, `'q'` 키를 입력하면 프로그램을 종료 시켜라.
+
+
+---
+
+- 컨텐트팬에 키 리스너를 달고, 포커스를 주어, 키 입력을 받도록 해야 한다.
+
+- 색은 `new Color(int r, int g, int b)`로 생성한다.
+
+- `r(red)`, `g(green)`, `b(blue)`는 색의 3요소로서 0~255 사이의 값이다.
+
+## 가상 키(Virtual Key)
+
+- 가상 키는 `KeyEvent` 클래스에 상수로 선언
+
+- 가상 키의 일부 소개
+
+## 가상 키와 입력된 키 판별
+
+- KeyEvent 객체
+  - 입력된 키 정보를 가진 이벤트 객체
+  - KeyEvent 객체의 메소드로 입력된 키 판별
+
+- KeyEvent 객체의 메소드로 입력된 키 판별
+  - `char KeyEvent.getKeyChar()`
+  - 키의 유니코드 문자 값 리턴
+  - Unicode 문자 키인 경우에만 의미 있음
+  - 입력된 키를 판별하기 위해 문자 값과 비교하면 됨
+
+```java
+public void keyPressed(KeyEvent e) {
+    if(e.getKeyChar() == 'q')
+        System.exit(0);
+}
+```
+> q 키가 누르면 프로그램 종료
+
+---
+
+- `int KeyEvent.getKeyCode()`
+  - 유니코드 키 포함
+  - 모든 키에 대한 정수형 키 코드 리턴
+  - 입력된 키를 판별하기 위해 가상키(Virtual Key) 값과 비교하여야 함
+  - 가상 키 값은 KeyEvent 클래스에 상수로 선언
+
+```java
+public void keyPressed(KeyEvent e) {
+    if(e.getKeyCode() == KeyEvent.VK_F5)
+        System.exit(0);
+}
+```
+> F5 키를 누르면 프로그램 종료
+
+## 유니코드(Unicode) 키
+- 유니코드 키의 특징
+
+    - 국제 산업 표준
+    - 전 세계의 문자를 컴퓨터에서 일관되게 표현하기 위한 코드 체계
+    - 문자들에 대해서만 키 코드 값 정의 : A~Z, a~z, 0~9, !, @, & 등
+
+
+문자가 아닌 키 경우에는 표준화된 키 코드 값 없음 <br>
+`<Function>` 키, `<Home>` 키, `<Up>` 키, `<Delete>` 키, `<Control>` 키, `<Shift>` 키, `<Alt>` 등은 플랫폼에 따라 키 코드 값이 다를 수 있음
+
+
+- 유니코드 키가 입력되는 경우
+ 
+    - keyPressed(), keyTyped(), keyReleased() 가 순서대로 호출
+
+
+- 유니코드 키가 아닌 경우
+
+    - keyPressed(), keyReleased() 만 호출됨
+
+## KeyListener
+응용프로그램에서 KeyListener를 상속받아 키 리스너 구현
+### keyListener의 3개 메소드
+```java
+void keyPressed(KeyEvent e) {
+    // 이벤트 처리 루틴 - 1 번
+}
+
+void keyReleased(KeyEvent e) {
+    // 이벤트 처리 루틴 - 2 번
+}
+
+void keyTyped(KeyEvent e) {
+    // 이벤트 처리 루틴 - 3번
+}
+```
+
+## Key 이벤트와 포커스
+
+### 키 입력 시, 다음 세 경우 각각 Key 이벤트 발생
+1. 키를 누르는 순간
+2. 누른 키를 떼는 순간
+3. 누른 키를 떼는 순간(Unicode키의 경우에만)
+
+
+### 키 이벤트를 받을 수 있는 조건
+- 모든 컴포넌트
+     - 현재 포커스(focus)를 가진 컴포넌트가 키 이벤트 독점
+
+
+### 포커스(focus)
+- 컴포넌트나 응용프로그램이 키 이벤트를 독점하는 권한
+    - 컴포넌트에 포커스 설정 방법 : 다음 2 라인 코드 필요
+
+
+```java
+javacomponent.setFocusable(true); // component가 포커스를 받을 수 있도록 설정
+component.requestFocus(); // component에 포커스 강제 지정
+```
+- 자바플랫폼마다 실행 환경의 초기화가 서로 다를 수 있기 때문에 다음 코드가 필요함
+- component.setFocusable(true);
+
+## JDK에서 제공하는 어탭터 클래스
+- 책 찾아보기
+
+## 어댑터 클래스
+- 이벤트 리스너 구현에 따른 부담
+
+- 리스너의 추상 메소드를 모두 구현해야 하는 부담
+    - 예) 마우스 리스너에서 마우스가 눌러지는 경우(mousePressed())만 처리하고자 하는 경우에도 나머지 4 개의 메소드를 모두 구현해야 하는 부담
+```java
+class MouseAdapter implements MouseListener, MouseMotionListener, MouseWheelListener {
+    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) {}
+    public void mouseMoved(MouseEvent e) {}
+    public void mouseWheelMoved(MouseWheelEvent e) {}
+}
+```
+- MouseListener 메소드: mousePressed, mouseReleased, mouseClicked, mouseEntered, mouseExited
+- MouseMotionListener 메소드: mouseDragged, mouseMoved
+- MouseWheelListener 메소드: mouseWheelMoved
+- 추상 메소드가 하나뿐인 리스너는 어댑터 없음
+
+ActionAdapter, ItemAdapter 클래스는 존재하지 않음
+어댑터 클래스(Adapter)
+
+리스너의 모든 메소드를 단순 리턴하도록 만든 클래스(JDK에서 제공)
+MouseAdapter 예
 
 # 2026.05.20
 
@@ -27,7 +226,7 @@ new 익명클래스의 슈퍼클래스이름(생성자인자들) {
 ```
 - 간단한 리스너의 경우 익명 클래스 사용 추천
     - 매소드의 개수가 1,2개인 리스너에 대해주로 사용
-        - ㅁctionListener, ItemListener
+        - ActionListener, ItemListener
 ## 이벤트 리스너 작성 방법
 
 ### [ 3 가지 방법 ]
