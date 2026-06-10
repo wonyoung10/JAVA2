@@ -13,8 +13,165 @@
 - [10주차](#20260506)
 - [11주차](#20260513)
 - [12주차](#20260520)
-- [13주차](#2026.05.27)
+- [13주차](#20260527)
+- [14주차](#20260605)
 <br>
+
+
+# 2026.06.05
+
+## 바이트 스트림으로 바이너리 파일 쓰기
+
+### 바이너리 값을 파일에 저장하기
+- 프로그램 내의 변수, 배열, 버퍼에 든 바이너리 값을 파일에 그대로 기록
+  - FileOutputStream 클래스 이용
+
+### 1. 파일 출력 스트림 생성(파일 열기)
+- 스트림을 생성하고 파일을 열어 스트림과 연결
+
+```java
+FileOutputStream fout = new FileOutputStream("c:\\Temp\\test.out");
+```
+
+### 2. 파일 쓰기
+- write()로 문자 하나 씩 파일에 기록
+
+```java
+byte b[] = {7, 51, 3, 4, -1, 24};
+for(int i=0; i<b.length; i++) fout.write(b[i]); // 배열 b를 바이너리 그대로 기록
+```
+
+```
+                  (7) (51) (3) (4) (-1) (24)
+00000000h: 07 33 03 04 FF 18      ; 2 3 ㄴ . ↑       (test.out 파일 내부)
+```
+
+## 3. 스트림 닫기
+- close()로 스트림 닫기
+
+## 문자 스트림으로 텍스트 파일 쓰기
+
+텍스트 파일에 쓰기 위해 문자 스트림 FileWriter 클래스 이용
+
+### 1. 파일 출력 스트림 생성(파일 열기)
+- 스트림을 생성하고 파일을 열어 스트림과 연결
+
+```java
+FileWriter fout = new FileWriter("c:\\Temp\\test.txt");
+```
+
+### 2. 파일 쓰기
+- write()로 문자 하나 씩 파일에 기록
+
+```java
+fout.write('A'); // 문자 'A'를 파일에 기록
+```
+
+- 블록 단위로 쓰기 가능
+
+```java
+char[] buf = new char[1024];
+fout.write(buf, 0, buf.length); // buf[0]부터 버퍼 크기만큼 쓰기
+```
+
+### 3. 스트림 닫기
+- close()로 스트림 닫기
+
+```java
+fout.close(); // 스트림 닫기. 더 이상 스트림에 기록할 수 없다.
+```
+
+
+
+
+## FileReader의 생성자와 주요 메소드
+
+### 생성자
+
+| 생성자 | 설명 |
+|--------|------|
+| `FileReader(File file)` | file로 지정한 파일에서 읽어 들이는 FileReader 객체를 생성 |
+| `FileReader(String name)` | name이라는 이름을 가진 파일에서 읽어 들이는 FileReader 객체를 생성 |
+
+### 메소드
+
+| 메소드 | 설명 |
+|--------|------|
+| `int read()` | 문자 하나를 읽어서 정수형 값으로 반환 |
+| `int read(char[] cbuf)` | cbuf 배열 크기만큼의 문자를 최대로 읽어 cbuf에 담음. 읽는 중간에 EOF를 만나면 실제로 읽어 들인 문자 개수를 반환 |
+| `int read(char[] cbuf, int off, int len)` | 최대 len 개수만큼 읽어 cbuf 배열의 off 위치부터 채움. 도중에 EOF를 만나면 실제 읽은 문자 수를 반환 |
+| `String getEncoding()` | 해당 스트림이 사용 중인 문자 집합의 이름을 반환 |
+| `void close()` | 입력 스트림을 닫고, 연결된 시스템 자원을 반납 |
+
+## 파일 입출력과 예외 처리
+### 파일 입출력 동안 예외 발생 가능
+
+#### 스트림 생성 동안 : FileNotFoundException 발생 가능
+- 파일의 경로명이 틀리거나, 디스크의 고장 등으로 파일을 열 수 없다.
+
+```java
+FileReader fin = new FileReader("c:\\test.txt"); // FileNotFoundException 발생가능
+```
+
+#### 파일 읽기, 쓰기, 닫기를 하는 동안 : IOException 발생 가능
+- 디스크 오동작, 파일이 중간에 깨진 경우, 디스크 공간이 모자라서 파일 입출력 불가
+
+```java
+int c = fin.read(); // IOException 발생 가능
+```
+
+#### try-catch 블록 반드시 필요
+- 자바 컴파일러의 강제 사항
+
+```java
+try {
+    FileReader fin = new FileReader("c:\\test.txt");
+    ..
+    int c = fin.read();
+    ...
+    fin.close();
+} catch(FileNotFoundException e) {
+    System.out.println("파일을 열 수 없음");
+} catch(IOException e) {
+    System.out.println("입출력 오류");
+}
+```
+> 생략 가능. FileNotFoundException은 IOException을 상속받기 때문에 아래의 catch 블록 하나만 있으면 된다.
+
+
+## 문자 스트림으로 텍스트 파일 읽기
+
+텍스트 파일을 읽기 위해 문자 스트림 FileReader 클래스 이용
+
+### 1. 파일 입력 스트림 생성(파일 열기)
+
+- 스트림을 생성하고 파일을 열어 스트림과 연결
+
+```java
+FileReader fin = new FileReader("c:\\test.txt");
+```
+
+### 2. 파일 읽기
+
+- read()로 문자 하나 씩 파일에서 읽음
+
+```java
+int c;
+while((c = fin.read()) != -1) { // 문자를 c에 읽음. 파일 끝까지 반복
+    System.out.print((char)c); // 문자 c 화면에 출력
+}
+```
+
+### 3. 스트림 닫기
+- 스트림이 더 이상 필요 없으면 닫아야 함. 닫힌 스트림에서는 읽을 수 없음
+- close()로 스트림 닫기
+
+```java
+fin.close();
+```
+
+## JDK의 바이트 스트림 클래스 계층 구조
+
 
 # 2026.05.27
 
